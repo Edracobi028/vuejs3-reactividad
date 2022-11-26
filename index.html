@@ -15,11 +15,11 @@
             <div class="cart-content">
                 <div class="cart-content__product">
                     <img src="" alt="">
-                    <span> Producto - $ 500.00</span>
+                    <span> {{ product.name }} - $ {{ new Intl.NumberFormat("es-MX").format(product.price)  }}</span>
                 </div>
                 <div class="cart-content__product">
                     <img src="" alt="">
-                    <span> Producto - $ 500.00</span>
+                    <span> {{ product.name }} - $ {{ new Intl.NumberFormat("es-MX").format(product.price)  }}</span>
                 </div>
             </div>
         </header>
@@ -34,13 +34,13 @@
                 </div>
             </section>
             <section class="description">
-                <h4>Producto</h4>
+                <h4>{{ product.name.toUpperCase() }} {{ product.stock == 0 ? "\u{1F62D}" : "😎" }}</h4>
                 <span class="badge new">Nuevo</span>
                 <span class="badge new">Oferta</span>
                 <p class="description__status"></p>
-                <p class="description__price">$500.00</p>
-                <p class="description__content">$500.00
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?
+                <p class="description__price">{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
+                <p class="description__content">
+                    
                 </p>
                 <div class="discount">
                     <span>Código de Descuento:</span>
@@ -56,7 +56,36 @@
     <!-- Logica de aplicación -->
     <script>
         const { createApp } = Vue;  //crear una aplicación de vue
-        const app = createApp();    //insertamos en una variable app
+        const app = createApp({
+            data(){
+                return{
+                    product:{
+                        name: "Camara",
+                        price: 450_000,
+                        stock: 1,
+                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
+                        images: [
+                            { 
+                                image: "./images/camara.jpg",
+                                thumbnail: "./images/camara-thumb.jpg",
+                            },
+                            { 
+                                image: "./images/camara-2.jpg",
+                                thumbnail: "./images/camara-2-thumb.jpg",
+                            }
+                        ]
+                    },
+
+                    computed:{
+                   
+                    },
+
+                    methods: {
+                       
+                    },
+                }
+            }
+        });    //insertamos en una variable app
         app.mount("#app");          //montamos la constante en div 
     </script>
 </body>
