@@ -66,11 +66,13 @@
     
     <!-- Logica de aplicación -->
     <script>
-        const { createApp, ref } = Vue;  //crear una aplicación de vue
+        const { createApp, ref, reactive, toRefs } = Vue;  //crear una aplicación de vue
         const app = createApp({
             setup(){
-                const product = ref ({
-                    name: "Camara",
+                //Variable tipo reactive que contiene todo el estado de mi producto
+                const productState = reactive({
+                    product:{
+                        name: "Camara",
                         price: 450_000,
                         stock: 5,
                         content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
@@ -86,12 +88,16 @@
                         ],
                         new: true,
                         offer: false,
-                        quantity: 1,   
+                        quantity: 1,
+                    },
+                    activeImage: 0,
                 });
+                const cartState = reactive({
+                    cartOpen: true,
+                    cart: [],
 
-                const activeImage = ref(0);
-                const cartOpen = ref(true);
-                const cart = ref([]);
+                });
+               
                 const discountCodes = ref(["RAZO", "IOSAMUEL"]);
 
                 //.VALUE para cuando se necesiten accesar a las variables dentro de una función
@@ -100,33 +106,36 @@
                     //validar si esta dentro del arreglo discountCodes
                     console.log("discountCodeIndex = "+discountCodeIndex);
                     if(discountCodeIndex >= 0){
-                        product.value.price *= 50/100;
-                        discountCodes.value.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
+                        productState.product.price *= 50/100;
+                        discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
                     }
                 }
 
                 function addToCart(){
-                    const prodIndex = cart.value.findIndex(prod => prod.name == product.value.name); //validar si ya existe
+                    const prodIndex = cartState.cart.findIndex(prod => prod.name == productState.product.name); //validar si ya existe
                     console.log("prodIndex = " + prodIndex );
                     if(prodIndex >= 0){
-                        cart.value[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
+                        cartState.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
                     }else{
-                        cart.value.push(product.value); //añadir producto al carrito
+                        cartState.cart.push(productState.product); //añadir producto al carrito
                     }
-                    product.value.stock -= 1; //disminuir el stock    
+                    productState.product.stock -= 1; //disminuir el stock    
                 }
 
                 
                 //Las funciones setup siempre deben de retornar un objeto
                 return {
-                    product,
-                    activeImage,
-                    cartOpen,
-                    cart,
-                    applyDiscount,
+                    ...toRefs(productState),
+
+                    ...toRefs(cartState),
+                  
                     addToCart,
+
+                    applyDiscount,
+                    
                 }
             }
+
         });    //insertamos en una variable app
         app.mount("#app");          //montamos la constante en div 
     </script>
