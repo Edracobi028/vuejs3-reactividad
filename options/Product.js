@@ -32,12 +32,11 @@ app.component("product",{
                         @keyup.enter="applyDiscount($event)"
                     >
                 </div>
-                <button :disabled="product.stock == 0" @click="addToCart()">Agregar al carrito</button>
+                <button :disabled="product.stock == 0" @click="sendToCart()">Agregar al carrito</button>
             </section>
     `,
-    props:[
-        "product"
-    ],
+    props:[ "product" ],
+    emits:[ "sendtocart" ],
     data(props) {
         return{  
             activeImage: 0,
@@ -55,16 +54,11 @@ app.component("product",{
                 this.discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
             }
         },
-        addToCart(){
-            const prodIndex = this.cart.findIndex(prod => prod.name == this.product.name); //validar si ya existe
-            console.log("prodIndex = " + prodIndex );
-            if(prodIndex >= 0){
-                this.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
-            }else{
-                this.cart.push(this.product); //añadir producto al carrito
-            }
-            this.product.stock -= 1; //disminuir el stock
-        }
+
+        sendToCart(){
+            this.$emit("sendtocart", this.product);
+        },
+        
     },
 });
 

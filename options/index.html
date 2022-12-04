@@ -22,7 +22,7 @@
         </header>
         <main>
 
-            <product v-for="product in products" :key="product.name" :product="product"></product>
+            <product v-for="product in products" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
             
         </main>
     </div> <!-- aqui se monta toda la aplicación de VUE -->
@@ -119,7 +119,18 @@
                     
                 };
             },
-            methods: {}
+            methods: {
+                addToCart(product){
+                    const prodIndex = this.cart.findIndex(prod => prod.name == product.name); //validar si ya existe
+                    console.log("prodIndex = " + prodIndex );
+                    if(prodIndex >= 0){
+                        this.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
+                    }else{
+                        this.cart.push(product); //añadir producto al carrito
+                    }
+                    product.stock -= 1; //disminuir el stock
+                }
+            }
         });    //insertamos en una variable app
         
     </script>

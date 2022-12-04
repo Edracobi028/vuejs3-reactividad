@@ -33,27 +33,19 @@ app.component("product", {
                         @keyup.enter="applyDiscount($event)"
                     >
                 </div>
-                <button :disabled="product.stock == 0" @click="addToCart()">Agregar al carrito</button>
+                <button :disabled="product.stock == 0" @click="sendToCart()">Agregar al carrito</button>
             </section>
     
     `,
     props: ["product"],
-    setup(props){
+    emits: ["sendtocart"],
+    setup(props, context){
         //Variable tipo reactive que contiene todo el estado de mi producto
         const productState = reactive({
             activeImage: 0,
         });
         
-        function addToCart(){
-            const prodIndex = cartState.cart.findIndex(prod => prod.name == props.product.name); //validar si ya existe
-            console.log("prodIndex = " + prodIndex );
-            if(prodIndex >= 0){
-                cartState.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
-            }else{
-                cartState.cart.push(props.product); //añadir producto al carrito
-            }
-            props.product.stock -= 1; //disminuir el stock    
-        }
+        
 
         const discountCodes = ref(["RAZO", "IOSAMUEL"]);
 
@@ -64,16 +56,19 @@ app.component("product", {
             console.log("discountCodeIndex = "+discountCodeIndex);
             if(discountCodeIndex >= 0){
                 props.product.price *= 50/100;
-                discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
+                discountCodes.value.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
             }
 
         }
 
+        function sendToCart(){
+            context.emit("sendtocart", props.product);
+        }
+
         return{
             ...toRefs(productState),
-            addToCart,
             applyDiscount,
-            
+            sendToCart
         }
     }
 });
