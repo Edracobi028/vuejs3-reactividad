@@ -22,9 +22,7 @@
         </header>
         <main>
 
-            <product></product>
-            <product></product>
-            <product></product>
+            <product v-for="product in products" :key="product.name" :product="product"></product>
             
         </main>
     </div> <!-- aqui se monta toda la aplicación de VUE -->
@@ -38,7 +36,84 @@
         const app = createApp({
             data(){
                 return{
-                    
+                    products:[
+                        {
+                            name: "Camara",
+                            price: 450_000,
+                            stock: 5,
+                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
+                            images: [
+                                { 
+                                    image: "./images/camara.jpg",
+                                    thumbnail: "./images/camara-thumb.jpg",
+                                },
+                                { 
+                                    image: "./images/camara-2.jpg",
+                                    thumbnail: "./images/camara-2-thumb.jpg",
+                                }
+                            ],
+                            new: true,
+                            offer: false,
+                            quantity: 1,
+                        },
+                        {
+                            name: "Camara PL",
+                            price: 250_000,
+                            stock: 2,
+                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
+                            images: [
+                                { 
+                                    image: "./images/camara.jpg",
+                                    thumbnail: "./images/camara-thumb.jpg",
+                                },
+                                { 
+                                    image: "./images/camara-2.jpg",
+                                    thumbnail: "./images/camara-2-thumb.jpg",
+                                }
+                            ],
+                            new: true,
+                            offer: false,
+                            quantity: 1,
+                        },
+                        {
+                            name: "Camara PL2",
+                            price: 550_000,
+                            stock: 3,
+                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
+                            images: [
+                                { 
+                                    image: "./images/camara.jpg",
+                                    thumbnail: "./images/camara-thumb.jpg",
+                                },
+                                { 
+                                    image: "./images/camara-2.jpg",
+                                    thumbnail: "./images/camara-2-thumb.jpg",
+                                }
+                            ],
+                            new: true,
+                            offer: false,
+                            quantity: 1,
+                        },
+                        {
+                            name: "Camara PL3",
+                            price: 650_000,
+                            stock: 3,
+                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
+                            images: [
+                                { 
+                                    image: "./images/camara.jpg",
+                                    thumbnail: "./images/camara-thumb.jpg",
+                                },
+                                { 
+                                    image: "./images/camara-2.jpg",
+                                    thumbnail: "./images/camara-2-thumb.jpg",
+                                }
+                            ],
+                            new: true,
+                            offer: false,
+                            quantity: 1,
+                        },
+                    ],
                     cartOpen: true,
                     cart: [],
                     

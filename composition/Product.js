@@ -1,5 +1,5 @@
-app.component("product",{
-    template: /* vue-html*/ `
+app.component("product", {
+    template: /* vue-html */ `
         <section class="product">
                 <div class="product__thumbnails">
                     <div 
@@ -35,37 +35,45 @@ app.component("product",{
                 </div>
                 <button :disabled="product.stock == 0" @click="addToCart()">Agregar al carrito</button>
             </section>
+    
     `,
-    props:[
-        "product"
-    ],
-    data(props) {
-        return{  
+    props: ["product"],
+    setup(props){
+        //Variable tipo reactive que contiene todo el estado de mi producto
+        const productState = reactive({
             activeImage: 0,
-            discountCodes: ["RAZO", "IOSAMUEL"],
-        };
-    },
-    methods: {
-                
-        applyDiscount(event){
-            const discountCodeIndex = this.discountCodes.indexOf(event.target.value); //obtener el valor en una variable y buscar con la funcion indexOf
+        });
+        
+        function addToCart(){
+            const prodIndex = cartState.cart.findIndex(prod => prod.name == props.product.name); //validar si ya existe
+            console.log("prodIndex = " + prodIndex );
+            if(prodIndex >= 0){
+                cartState.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
+            }else{
+                cartState.cart.push(props.product); //añadir producto al carrito
+            }
+            props.product.stock -= 1; //disminuir el stock    
+        }
+
+        const discountCodes = ref(["RAZO", "IOSAMUEL"]);
+
+        //.VALUE para cuando se necesiten accesar a las variables dentro de una función
+        function applyDiscount(event){
+            const discountCodeIndex = discountCodes.value.indexOf(event.target.value); //obtener el valor en una variable y buscar con la funcion indexOf
             //validar si esta dentro del arreglo discountCodes
             console.log("discountCodeIndex = "+discountCodeIndex);
             if(discountCodeIndex >= 0){
-                this.product.price *= 50/100;
-                this.discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
+                props.product.price *= 50/100;
+                discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
             }
-        },
-        addToCart(){
-            const prodIndex = this.cart.findIndex(prod => prod.name == this.product.name); //validar si ya existe
-            console.log("prodIndex = " + prodIndex );
-            if(prodIndex >= 0){
-                this.cart[prodIndex].quantity += 1;//En el carrito Aumentar la cantidad del producto encontrado
-            }else{
-                this.cart.push(this.product); //añadir producto al carrito
-            }
-            this.product.stock -= 1; //disminuir el stock
+
         }
-    },
+
+        return{
+            ...toRefs(productState),
+            addToCart,
+            applyDiscount,
+            
+        }
+    }
 });
-    
