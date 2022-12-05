@@ -23,7 +23,7 @@ app.component("product", {
                 <p class="description__status" v-if="product.stock == 3">Quedan pocas unidades!</p>
                 <p class="description__status" v-else-if="product.stock == 2">El producto esta por terminarse!</p>
                 <p class="description__status" v-else-if="product.stock == 1">Última unidad disponible!</p>
-                <p class="description__price">{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
+                <p class="description__price" :style="{ color: price_color }" >{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
                 <p class="description__content"></p>
                 <div class="discount">
                     <span>Código de Descuento:</span>
@@ -43,6 +43,7 @@ app.component("product", {
         //Variable tipo reactive que contiene todo el estado de mi producto
         const productState = reactive({
             activeImage: 0,
+            price_color: "rgb(104, 104, 209)",
         });
         
         
@@ -64,6 +65,24 @@ app.component("product", {
         function sendToCart(){
             context.emit("sendtocart", props.product);
         }
+
+        //Recibo 2 cosas: 1 propiedad a observar + 2 handler funcion
+        watch(
+            () => productState.activeImage,
+            (val, oldValue) => {
+                console.log(val, oldValue);
+            }
+        );
+
+        //Watcher para detectar el último producto y mostrar el precio en letras rojas
+        watch(
+            () => props.product.stock,
+            (stock) => {
+                if(stock <= 1){
+                    productState.price_color = "rgb(188 30 67)";
+                }
+            }
+        ); 
 
         return{
             ...toRefs(productState),

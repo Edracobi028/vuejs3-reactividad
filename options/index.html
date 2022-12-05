@@ -17,13 +17,18 @@
                     <img v-bind:src="product.images[0].image" :alt="product.name. toUpperCase()">
                     <span> {{ product.name }} - $ {{ new Intl.NumberFormat("es-MX").format(product.price)  }} ({{product.quantity}})</span>
                 </div>
-               
+                <p>Total: $ {{ new Intl.NumberFormat("es-MX").format(total) }}</p>
             </div>
+            
         </header>
         <main>
-
-            <product v-for="product in products" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
-            
+            <product 
+                v-for="product in products" 
+                :key="product.name" 
+                :product="product" 
+                @sendtocart="addToCart($event)"
+            >
+            </product>
         </main>
     </div> <!-- aqui se monta toda la aplicación de VUE -->
     
@@ -115,6 +120,7 @@
                         },
                     ],
                     cartOpen: true,
+                    total:0,
                     cart: [],
                     
                 };
@@ -129,6 +135,21 @@
                         this.cart.push(product); //añadir producto al carrito
                     }
                     product.stock -= 1; //disminuir el stock
+                }
+            },
+
+            watch:{
+                //watch de un objeto, indicando que observaremos sus propiedades con "deep"
+                cart:{
+                    handler(cart){
+                        //aplicamos un reduce de JS (reducir el arreglo e ir sumando los valores)
+                        this.total = cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
+                    },
+                    deep: true
                 }
             }
         });    //insertamos en una variable app
