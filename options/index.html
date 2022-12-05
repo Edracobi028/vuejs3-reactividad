@@ -120,7 +120,7 @@
                         },
                     ],
                     cartOpen: true,
-                    total:0,
+                    /* total:0, */
                     cart: [],
                     
                 };
@@ -138,9 +138,10 @@
                 }
             },
 
+            //Watcher para sumar el precio de los productos
             watch:{
                 //watch de un objeto, indicando que observaremos sus propiedades con "deep"
-                cart:{
+                /* cart:{
                     handler(cart){
                         //aplicamos un reduce de JS (reducir el arreglo e ir sumando los valores)
                         this.total = cart.reduce((prev, curr) => {
@@ -150,6 +151,15 @@
                         }, 0);
                     },
                     deep: true
+                } */
+            },
+            computed:{
+                total(){
+                    return this.cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
                 }
             }
         });    //insertamos en una variable app

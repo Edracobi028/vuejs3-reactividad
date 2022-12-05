@@ -22,7 +22,7 @@ app.component("product",{
                 <p class="description__status" v-if="product.stock == 3">Quedan pocas unidades!</p>
                 <p class="description__status" v-else-if="product.stock == 2">El producto esta por terminarse!</p>
                 <p class="description__status" v-else-if="product.stock == 1">Última unidad disponible!</p>
-                <p class="description__price">{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
+                <p class="description__price" :style="{ color: price_color }">{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
                 <p class="description__content"></p>
                 <div class="discount">
                     <span>Código de Descuento:</span>
@@ -60,6 +60,19 @@ app.component("product",{
         },
         
     },
+
+    watch: {
+
+    },
+
+    computed: {
+        price_color(){
+            if (this.product.stock <= 1){
+                return "rgb(188 30 67)";
+            }
+            return "rgb(104, 104, 209)";
+        }
+    }
 });
 
     

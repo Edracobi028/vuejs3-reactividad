@@ -66,8 +66,10 @@ app.component("product", {
             context.emit("sendtocart", props.product);
         }
 
-        //Recibo 2 cosas: 1 propiedad a observar + 2 handler funcion
+        //NOTA: En Watch siempre Recibe 2 parametros: 1= Propiedad a observar + 2= Handler 
+        //Watcher de ejemplo para detectar si esa activa la imagen
         watch(
+            //funcion anonima por no ser objeto
             () => productState.activeImage,
             (val, oldValue) => {
                 console.log(val, oldValue);
@@ -76,6 +78,7 @@ app.component("product", {
 
         //Watcher para detectar el último producto y mostrar el precio en letras rojas
         watch(
+            //funcion anonima por no ser objeto
             () => props.product.stock,
             (stock) => {
                 if(stock <= 1){
