@@ -31,88 +31,11 @@
     
     <!-- Logica de aplicación -->
     <script>
-        const { createApp, ref, reactive, toRefs, watch, computed  } = Vue;  //crear una aplicación de vue y declarar las herramientas que necesitaremos
+        const { createApp, ref, reactive, toRefs, watch, computed, onMounted  } = Vue;  //crear una aplicación de vue y declarar las herramientas que necesitaremos
         const app = createApp({
             setup(){
                 //Lista de productos de nuestra app
-                const products = ref([
-                    {
-                        name: "Camara",
-                        price: 450_000,
-                        stock: 5,
-                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                        images: [
-                            { 
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            { 
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        new: true,
-                        offer: false,
-                        quantity: 1,
-                    },
-                    {
-                        name: "Camara PL",
-                        price: 250_000,
-                        stock: 2,
-                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                        images: [
-                            { 
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            { 
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        new: true,
-                        offer: false,
-                        quantity: 1,
-                    },
-                    {
-                        name: "Camara PL2",
-                        price: 550_000,
-                        stock: 3,
-                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                        images: [
-                            { 
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            { 
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        new: true,
-                        offer: false,
-                        quantity: 1,
-                    },
-                    {
-                        name: "Camara PL3",
-                        price: 650_000,
-                        stock: 3,
-                        content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                        images: [
-                            { 
-                                image: "./images/camara.jpg",
-                                thumbnail: "./images/camara-thumb.jpg",
-                            },
-                            { 
-                                image: "./images/camara-2.jpg",
-                                thumbnail: "./images/camara-2-thumb.jpg",
-                            }
-                        ],
-                        new: true,
-                        offer: false,
-                        quantity: 1,
-                    },
-                ]); 
+                const products = ref([]); 
 
                 const cartState = reactive({
                     cartOpen: true,
@@ -157,12 +80,22 @@
                     }
                 ); */
 
+                onMounted(() => {
+                    console.log("mounted");
+                });
+                // setup() == created()
+                fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+                .then(res => res.json())
+                .then(data => {
+                    products.value = data;
+                })
+
+
                 //Las funciones setup siempre deben de retornar un objeto
                 return {
                     ...toRefs(cartState),
                     products,
                     addToCart,
-                    total,   
                     
                 }
             }
