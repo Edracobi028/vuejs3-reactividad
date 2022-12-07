@@ -31,7 +31,7 @@
     
     <!-- Logica de aplicación -->
     <script>
-        const { createApp, ref, reactive, toRefs, watch } = Vue;  //crear una aplicación de vue
+        const { createApp, ref, reactive, toRefs, watch, computed  } = Vue;  //crear una aplicación de vue y declarar las herramientas que necesitaremos
         const app = createApp({
             setup(){
                 //Lista de productos de nuestra app
@@ -117,9 +117,24 @@
                 const cartState = reactive({
                     cartOpen: true,
                     cart: [],
-                    total: 0,
+                    total: computed( () => {
+                        return cartState.total = cartState.cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
+                    }),
 
                 });
+
+                //Forma #1 Transformar la variable total a computada y ponerla en "Return"
+                 /* const total = computed(  () => {
+                    return cartState.total = cartState.cart.reduce((prev, curr) => {
+                        const prevPrice = prev.price || prev;
+                        const prevQuantity = prev.quantity || 1;
+                        return prevPrice * prevQuantity + curr.price * curr.quantity;
+                    }, 0);
+                });  */
 
                 function addToCart(product){
                     const prodIndex = cartState.cart.findIndex(prod => prod.name == product.name); //validar si ya existe
@@ -133,20 +148,21 @@
                 }
 
                 //watcher por handler del carrito para ir sumando precio de productos
-                watch(cartState.cart, (value, oldValue) => {
-                    cartState.total = cartState.cart.reduce((prev, curr) => {
-                        const prevPrice = prev.price || prev;
-                        const prevQuantity = prev.quantity || 1;
-                        return prevPrice * prevQuantity + curr.price * curr.quantity;
-                    }, 0);
-                }
-                );
+                /* watch(cartState.cart, (value, oldValue) => {
+                        cartState.total = cartState.cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
+                    }
+                ); */
 
                 //Las funciones setup siempre deben de retornar un objeto
                 return {
                     ...toRefs(cartState),
                     products,
-                    addToCart   
+                    addToCart,
+                    total,   
                     
                 }
             }

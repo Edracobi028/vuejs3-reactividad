@@ -43,10 +43,19 @@ app.component("product", {
         //Variable tipo reactive que contiene todo el estado de mi producto
         const productState = reactive({
             activeImage: 0,
-            price_color: "rgb(104, 104, 209)",
+            price_color : computed(() => 
+                props.product.stock <= 1 ? "rgb(188 30 67)" : "rgb(104, 104, 209)"
+            )
+            /* price_color: "rgb(104, 104, 209)", */
         });
         
-        
+        //computed debera detectar si algo cambia 
+        /* const price_color = computed(() => {
+            if(props.product.stock <=1 ){
+                return "rgb(188 30 67)";
+            }
+            return "rgb(104, 104, 209)";
+        }); */
 
         const discountCodes = ref(["RAZO", "IOSAMUEL"]);
 
@@ -76,8 +85,8 @@ app.component("product", {
             }
         );
 
-        //Watcher para detectar el último producto y mostrar el precio en letras rojas
-        watch(
+        //Watcher para detectar el stock de nuestro producto y cambiar a letras rojas si queda uno
+       /*  watch(
             //funcion anonima por no ser objeto
             () => props.product.stock,
             (stock) => {
@@ -85,12 +94,12 @@ app.component("product", {
                     productState.price_color = "rgb(188 30 67)";
                 }
             }
-        ); 
+        );  */
 
         return{
             ...toRefs(productState),
             applyDiscount,
-            sendToCart
+            sendToCart,
         }
     }
 });
