@@ -22,7 +22,7 @@ app.component("product",{
                 <p class="description__status" v-if="product.stock == 3">Quedan pocas unidades!</p>
                 <p class="description__status" v-else-if="product.stock == 2">El producto esta por terminarse!</p>
                 <p class="description__status" v-else-if="product.stock == 1">Última unidad disponible!</p>
-                <p class="description__price">{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
+                <p class="description__price" :style="{ color: price_color }" >{{ new Intl.NumberFormat("es-MX").format(product.price)  }}</p>
                 <p class="description__content"></p>
                 <div class="discount">
                     <span>Código de Descuento:</span>
@@ -41,6 +41,7 @@ app.component("product",{
         return{  
             activeImage: 0,
             discountCodes: ["RAZO", "IOSAMUEL"],
+            price_color: "rgb(104, 104, 209)",
         };
     },
     methods: {
@@ -48,7 +49,6 @@ app.component("product",{
         applyDiscount(event){
             const discountCodeIndex = this.discountCodes.indexOf(event.target.value); //obtener el valor en una variable y buscar con la funcion indexOf
             //validar si esta dentro del arreglo discountCodes
-            console.log("discountCodeIndex = "+discountCodeIndex);
             if(discountCodeIndex >= 0){
                 this.product.price *= 50/100;
                 this.discountCodes.splice(discountCodeIndex, 1); //eliminar si ya fue utilizado
@@ -60,6 +60,20 @@ app.component("product",{
         },
         
     },
+    //Para crear observadores de cualquier propiedad disponible activa en el componente
+    watch:{
+        //Escuchar valor actual y valor antiguo
+        activeImage(value, oldValue){
+            console.log(value, oldValue);
+        },
+        //Definir una propiedad con ("") + funcion pidiendole el valor del stock
+        "product.stock"(stock){
+            console.log(stock);
+            if(stock <= 1){
+               this.price_color = "rgb(188, 30, 67)"; 
+            }
+        }
+    }
 });
 
     
