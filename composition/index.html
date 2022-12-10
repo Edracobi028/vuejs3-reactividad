@@ -19,9 +19,12 @@
                 </div>
                 <p>Total: $ {{ new Intl.NumberFormat("es-MX").format(total) }}</p>
             </div>
+            <div class="product-search">
+                <input type="text" placeholder="Buscar producto..." v-model="filtro">
+            </div>
         </header>
         <main>
-            <product v-for="product in products" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
+            <product v-for="product in filteredProducts" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
             
         </main>
     </div> <!-- aqui se monta toda la aplicación de VUE -->
@@ -36,6 +39,8 @@
             setup(){
                 //Lista de productos de nuestra app
                 const products = ref([]); 
+
+                const filtro = ref("");
 
                 const cartState = reactive({
                     cartOpen: true,
@@ -90,13 +95,23 @@
                     products.value = data;
                 })
 
+                filteredProducts = computed(() => {
+                    if (filtro.value != "") {
+                        return products.value.filter((product) =>
+                            product.name.toUpperCase().includes(filtro.value.toUpperCase())
+                        );
+                    }
+                    return products.value;
+                });
 
                 //Las funciones setup siempre deben de retornar un objeto
                 return {
                     ...toRefs(cartState),
                     products,
                     addToCart,
-                    
+                    filtro,
+                    filteredProducts,
+
                 }
             }
 
