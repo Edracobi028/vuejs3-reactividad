@@ -17,13 +17,18 @@
                     <img v-bind:src="product.images[0].image" :alt="product.name. toUpperCase()">
                     <span> {{ product.name }} - $ {{ new Intl.NumberFormat("es-MX").format(product.price)  }} ({{product.quantity}})</span>
                 </div>
-               
+                <p>Total: $ {{ new Intl.NumberFormat("es-MX").format(total) }}</p>
             </div>
+            
         </header>
         <main>
-
-            <product v-for="product in products" :key="product.name" :product="product" @sendtocart="addToCart($event)"></product>
-            
+            <product 
+                v-for="product in products" 
+                :key="product.name" 
+                :product="product" 
+                @sendtocart="addToCart($event)"
+            >
+            </product>
         </main>
     </div> <!-- aqui se monta toda la aplicación de VUE -->
     
@@ -36,85 +41,9 @@
         const app = createApp({
             data(){
                 return{
-                    products:[
-                        {
-                            name: "Camara",
-                            price: 450_000,
-                            stock: 5,
-                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                            images: [
-                                { 
-                                    image: "./images/camara.jpg",
-                                    thumbnail: "./images/camara-thumb.jpg",
-                                },
-                                { 
-                                    image: "./images/camara-2.jpg",
-                                    thumbnail: "./images/camara-2-thumb.jpg",
-                                }
-                            ],
-                            new: true,
-                            offer: false,
-                            quantity: 1,
-                        },
-                        {
-                            name: "Camara PL",
-                            price: 250_000,
-                            stock: 2,
-                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                            images: [
-                                { 
-                                    image: "./images/camara.jpg",
-                                    thumbnail: "./images/camara-thumb.jpg",
-                                },
-                                { 
-                                    image: "./images/camara-2.jpg",
-                                    thumbnail: "./images/camara-2-thumb.jpg",
-                                }
-                            ],
-                            new: true,
-                            offer: false,
-                            quantity: 1,
-                        },
-                        {
-                            name: "Camara PL2",
-                            price: 550_000,
-                            stock: 3,
-                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                            images: [
-                                { 
-                                    image: "./images/camara.jpg",
-                                    thumbnail: "./images/camara-thumb.jpg",
-                                },
-                                { 
-                                    image: "./images/camara-2.jpg",
-                                    thumbnail: "./images/camara-2-thumb.jpg",
-                                }
-                            ],
-                            new: true,
-                            offer: false,
-                            quantity: 1,
-                        },
-                        {
-                            name: "Camara PL3",
-                            price: 650_000,
-                            stock: 3,
-                            content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa tenetur, laudantium placeat obcaecati autem deleniti magni. Sit reprehenderit   ipsum quidem reiciendis suscipit, fuga pariatur molestiae deserunt ea temporibus, doloribus cumque?',
-                            images: [
-                                { 
-                                    image: "./images/camara.jpg",
-                                    thumbnail: "./images/camara-thumb.jpg",
-                                },
-                                { 
-                                    image: "./images/camara-2.jpg",
-                                    thumbnail: "./images/camara-2-thumb.jpg",
-                                }
-                            ],
-                            new: true,
-                            offer: false,
-                            quantity: 1,
-                        },
-                    ],
+                    products:[],
                     cartOpen: true,
+                    /* total:0, */
                     cart: [],
                     
                 };
@@ -130,7 +59,45 @@
                     }
                     product.stock -= 1; //disminuir el stock
                 }
-            }
+            },
+
+            //Watcher para sumar el precio de los productos
+            watch:{
+                //watch de un objeto, indicando que observaremos sus propiedades con "deep"
+                /* cart:{
+                    handler(cart){
+                        //aplicamos un reduce de JS (reducir el arreglo e ir sumando los valores)
+                        this.total = cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
+                    },
+                    deep: true
+                } */
+            },
+            computed:{
+                total(){
+                    return this.cart.reduce((prev, curr) => {
+                            const prevPrice = prev.price || prev;
+                            const prevQuantity = prev.quantity || 1;
+                            return prevPrice * prevQuantity + curr.price * curr.quantity;
+                        }, 0);
+                }
+            },
+
+            beforeCreate(){
+                console.log("beforeCreate");
+            },
+            created(){
+                //Hacemos un fetch hacia una url y un "then" para obtene info a Json y otro "then" para obtener la data y ponerla en nuestra variable products
+                fetch("https://my-json-server.typicode.com/iosamuel/demo/products")
+                .then(res => res.json())
+                .then(data => {
+                    this.products = data;
+                })
+            },
+
         });    //insertamos en una variable app
         
     </script>
